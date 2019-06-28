@@ -1,0 +1,149 @@
+<!-- Share configuration related to this particular Share module extension, such as:
+     - Doclib action config
+     - Form config
+     - Aspect and Type config
+     - Advanced Search
+
+    Note. Any configuration related to the whole Share.war webapp
+           (i.e. not specific to this share extension) should be
+            placed in the environment specific config file:
+             alfresco/tomcat/shared/classes/alfresco/web-extension/share-config-custom.xml
+     -->
+<alfresco-config>
+    <!--================================================================================================================
+        Make custom types and aspects visible in "Change Type" and "Manage Aspects" actions.
+         This will also make them visible when creating rules.
+        (will be merged with out-of-the-box configured types and aspects)
+    =============================================================================================================-->
+
+    <config evaluator="string-compare" condition="DocumentLibrary">
+        <aspects>
+            <visible>
+                <aspect name="mysys:assetReview"/>
+            </visible>
+            <addable> <!-- defaults to visible config -->
+            	<aspect name="mysys:assetReview"/>
+            </addable>
+            <removeable> <!-- defaults to visible config -->
+            	<aspect name="mysys:assetReview"/>
+            </removeable>
+        </aspects>
+        <types>
+            <!-- Define the ACME base doc type as decedent from cm:content -->
+            <type name="cm:content">
+                <subtype name="mysys:asset"/>
+            </type>
+        </types>
+    </config>
+
+
+
+    <!-- Create and search forms for acme:document -->
+    <config evaluator="node-type" condition="mysys:asset">
+        <forms>
+            <form>
+                <field-visibility>
+                    <show id="cm:name" label="Name"/>
+                    <show id="cm:title" label="Title" force="true"/>
+                    <show id="cm:description" label="Description" force="true"/>
+                    <!-- MySys custom props -->
+                    <show id="mysys:contentOwner" label="ContentOwner" force="true"/>
+                </field-visibility>
+                <appearance>
+                    <field id="cm:name">
+                    	<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>                                            
+                    <field id="cm:title">
+                    	<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>                                                              
+					<field id="cm:description">
+						<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>
+                    <field id="mysys:contentOwner" label="Content Owner">
+                    	<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>
+                </appearance>
+            </form>
+            <form id="doclib-simple-metadata">
+                <field-visibility>
+                    <show id="cm:name" label="Name"/>
+                    <show id="cm:title" label="Title" force="true"/>
+                    <show id="cm:description" label="Description" force="true"/>
+                    <!-- MySys custom props -->
+                    <show id="mysys:contentOwner" label="ContentOwner" force="true"/>
+                </field-visibility>
+                <appearance>
+                    <field id="cm:name">
+                    	<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>                                            
+                    <field id="cm:title">
+                    	<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>                                                              
+					<field id="cm:description">
+						<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>
+                    <field id="mysys:contentOwner" label="Content Owner">
+                    	<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>
+                </appearance>
+            </form> 
+           	<form id="doclib-inline-edit">
+                <field-visibility>
+                    <show id="cm:name" label="Name"/>
+                    <show id="cm:title" label="Title" force="true"/>
+                    <show id="cm:description" label="Description" force="true"/>
+                    <!-- MySys custom props -->
+                    <show id="mysys:contentOwner" label="ContentOwner" force="true"/>
+                </field-visibility>
+                <appearance>
+                    <field id="cm:name">
+                    	<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>                                            
+                    <field id="cm:title">
+                    	<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>                                                              
+					<field id="cm:description">
+						<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>
+                    <field id="mysys:contentOwner" label="Content Owner">
+                    	<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                	</field>
+                </appearance>
+            </form>
+        </forms>
+    </config>
+    <config evaluator="aspect" condition="mysys:assetReview">
+    <forms>
+        <form>
+            <field-visibility>
+                <show id="mysys:assetReviewStatus" />
+            </field-visibility>
+            <appearance>                    
+                <field id="mysys:assetReviewStatus" label="Review Status" />
+            </appearance>
+        </form>
+    </forms>
+</config>
+
+<config evaluator="string-compare" condition="DocLibActions">
+	<actions>
+		<action id="asset-review-action" type="javascript" label="Asset Reviewed" icon="asset-review-action">
+        	<param name="function">onActionSimpleRepoAction</param>
+        	<permissions>
+            	    <permission allow="true">Write</permission>
+        	</permissions>
+        	<param name="action">asset-review-action</param>
+        	<param name="successMessage">Asset Status Changed</param>
+        	<param name="failureMessage">Failed</param>
+        </action>
+    </actions>
+    <actionGroups>
+		<actionGroup id="document-browse">				
+			<action index="450" id="asset-review-action" />				
+		</actionGroup>
+		<actionGroup id="document-details">
+			<action index="450" id="asset-review-action" />				
+		</actionGroup>
+	</actionGroups>
+</config>
+</alfresco-config>
