@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Definition of new Model -->
+<model name="mysys:mysys" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+    <!-- Optional meta-data about the model -->
+    <description>MySys Model</description>
+    <author>Alwin George</author>
+    <version>1.0</version>
+
+    <!-- Imports are required to allow references to definitions in other models -->
+    <imports>
+        <!-- Import Alfresco Dictionary Definitions -->
+        <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+        <!-- Import Alfresco Content Domain Model Definitions -->
+        <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+    </imports>
+
+    <!-- Introduction of new namespaces defined by this model -->
+    <namespaces>
+        <namespace uri="http://www.mysys.com/model/content/1.0" prefix="mysys" />
+    </namespaces>
+    <constraints>
+        <constraint name="mysys:reviewStatusList" type="LIST">
+            <parameter name="allowedValues">
+                <list>
+                    <value>Draft</value>
+                    <value>Production-Ready</value>
+                </list>
+            </parameter>
+        </constraint>
+    </constraints>
+
+    <types>
+        <!-- Enterprise-wide generic document type -->
+        <type name="mysys:asset">
+            <title>MySys Asset</title>
+            <parent>cm:content</parent>
+            <properties>
+                <property name="mysys:contentOwner">
+                    <type>d:text</type>                    
+                </property>
+            </properties>
+            <mandatory-aspects>
+                <aspect>mysys:assetReview</aspect>
+            </mandatory-aspects>
+        </type>        
+    </types>
+
+    <aspects>
+        <aspect name="mysys:assetReview">
+            <title>Asset Review</title>
+            <properties>
+                <property name="mysys:assetReviewStatus">
+                    <type>d:text</type>
+                    <default>Draft</default>
+                    <constraints>
+                        <constraint ref="mysys:reviewStatusList" />
+                    </constraints>
+                </property>                
+            </properties>
+        </aspect>
+    </aspects>
+</model>
